@@ -21,8 +21,8 @@ type PlanItem={
 
 type EventOption={id:string;title:string;start_at:string;guest_count:number};
 
-const CANVAS_W=960;
-const CANVAS_H=384;
+const CANVAS_W=384;
+const CANVAS_H=960;
 
 const itemCatalog=[
   {type:"round60",label:'60" Round',width:38,height:38,shape:"round" as const,seats:8,linenSize:'120" Round'},
@@ -90,8 +90,8 @@ export default function FloorPlanner({plan,events}:{plan:any;events:EventOption[
       ...template,
       id:crypto.randomUUID(),
       label:`${template.label} ${count}`,
-      x:80+(count%8)*18,
-      y:80+(count%6)*18,
+      x:36+((count-1)%4)*72,
+      y:180+(Math.floor((count-1)/4)%8)*82,
       linenColor:"White",
       notes:""
     };
@@ -125,7 +125,7 @@ export default function FloorPlanner({plan,events}:{plan:any;events:EventOption[
 
     function move(ev:PointerEvent){
       const nx=Math.max(0,Math.min(CANVAS_W-item.width,originalX+(ev.clientX-startX)*scaleX));
-      const ny=Math.max(0,Math.min(CANVAS_H-item.height,originalY+(ev.clientY-startY)*scaleY));
+      const ny=Math.max(92,Math.min(CANVAS_H-item.height,originalY+(ev.clientY-startY)*scaleY));
       setItems(prev=>prev.map(i=>i.id===item.id?{...i,x:Math.round(nx/4)*4,y:Math.round(ny/4)*4}:i));
     }
     function up(){
@@ -153,7 +153,7 @@ export default function FloorPlanner({plan,events}:{plan:any;events:EventOption[
       <div className="page-head">
         <div>
           <h1>Ballroom Floor Planner</h1>
-          <p>150' × 60' Ballroom planning canvas. Drag items, assign linens, and print the setup plan.</p>
+          <p>60' × 150' Ballroom planning canvas. Drag items, assign linens, and print the setup plan.</p>
         </div>
         <div className="actions">
           <Link className="btn btn-light" href="/app/floor-plans">All Floor Plans</Link>
@@ -223,16 +223,17 @@ export default function FloorPlanner({plan,events}:{plan:any;events:EventOption[
       <main className="planner-main">
         <div className="print-plan-header">
           <h1>{name}</h1>
-          <p>The Osgood Ballroom · 150' × 60' · Status: {status.replace("_"," ")}</p>
+          <p>The Osgood Ballroom · 60' × 150' · Status: {status.replace("_"," ")}</p>
         </div>
 
         <div className="ballroom-wrap">
           <div className="ballroom-canvas" ref={canvasRef}>
-            <div className="room-label">THE OSGOOD BALLROOM · 150' × 60'</div>
+            <div className="room-label">THE OSGOOD BALLROOM · 60' × 150'</div>
             <div className="north-label">NORTH WALL</div>
             <div className="door door-1">DOUBLE DOORS</div>
             <div className="door door-2">DOUBLE DOORS</div>
             <div className="door door-3">DOUBLE DOORS</div>
+            <div className="fixed-stage">STAGE</div>
             <div className="fixed-bar">FIXED BAR<br/><small>SE CORNER</small></div>
             {items.map(item=><button
               type="button"
