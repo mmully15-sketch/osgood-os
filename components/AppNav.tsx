@@ -14,6 +14,7 @@ export default async function AppNav(){
     <nav className="nav">
       <Link href="/app">Dashboard</Link>
       <Link href="/app/leads">Clients & Leads</Link>
+      <Link href="/app/tasks">Tasks</Link>
       <Link href="/app/quotes">Quotes</Link>
       <Link href="/app/settings">Settings</Link>
       <form action={signOut}><button className="btn btn-light" type="submit">Sign Out</button></form>
