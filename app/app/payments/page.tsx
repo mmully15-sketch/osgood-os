@@ -35,7 +35,7 @@ export default async function PaymentsPage(){
       <h2>Overdue Payments</h2>
       <div className="payment-list">
         {overdue.map(s=><Link href={`/app/quotes/${s.quote_id}`} className="payment-row overdue" key={s.id}>
-          <div><b>{s.quotes?.client_name}</b><div className="muted">{s.label} · {s.quotes?.quote_number}</div></div>
+          <div><b>{(s.quotes as any)?.client_name}</b><div className="muted">{s.label} · {(s.quotes as any)?.quote_number}</div></div>
           <b>{money(s.amount)}</b><span>{s.due_date}</span><span className="badge">Overdue</span>
         </Link>)}
         {!overdue.length&&<p className="muted">No overdue payment schedule items.</p>}
