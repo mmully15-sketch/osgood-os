@@ -1,33 +1,35 @@
-# Osgood OS v0.7 Event Detail Workflow
+# Osgood OS v0.8 Operations Dashboard
 
-## New event workflow features
+This is a changed-files-only update for the development branch.
 
-- Workflow stages: Planning, Contracted, Finalizing, Event Ready, Event Day, Completed
-- Readiness percentage
-- Final guest count
-- Primary and emergency contacts
-- Floor-plan status
-- Event-day role assignments
-- Grouped operations checklist
-- Checklist due dates, responsible staff, and notes
-- Vendor directory with arrival/departure times
-- Room setup records
-- Timeline management
-- Setup, teardown, incident, and internal notes
-- Post-event checklist items
+## New home screen
 
-## Required migration
+- Today's events
+- Tomorrow's events
+- Tasks due today
+- Overdue tasks
+- Upcoming event readiness
+- Open walkthroughs
+- Unconfirmed vendors
+- Event-day staff assignments
+- Quote value and open quote count
+- Active leads
+- Recent activity
 
-Run:
+## Database
 
-`supabase/migrations/005_event_detail_workflow.sql`
+No new Supabase migration is required. This dashboard uses tables already created by migrations 002 through 005.
 
-before deploying the updated app.
+## Apply this update
 
-## Deployment
+Copy only these files into the existing local repository:
 
-Replace your local GitHub Desktop repository files with this release, commit, and push.
+- `app/app/page.tsx`
+- `app/globals.css`
+- `README.md`
+
+Commit to the `development` branch.
 
 Suggested commit:
 
-`Expand event workflow and operations checklist`
+`Add operations command center dashboard`

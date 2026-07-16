@@ -12,8 +12,8 @@ export default async function TasksPage(){
       <thead><tr><th>Task</th><th>Client</th><th>Event Date</th><th>Due</th><th>Status</th><th></th></tr></thead>
       <tbody>{(tasks??[]).map(t=><tr key={t.id}>
         <td className={t.completed?"task-done":""}><b>{t.title}</b></td>
-        <td>{t.leads?.name?<Link href={`/app/leads/${t.lead_id}`}>{t.leads.name}</Link>:"Unassigned"}</td>
-        <td>{t.leads?.event_date||"Not set"}</td><td>{t.due_date||"Not set"}</td><td><span className="badge">{t.completed?"Completed":"Open"}</span></td>
+        <td>{(t.leads as any)?.name?<Link href={`/app/leads/${t.lead_id}`}>{(t.leads as any).name}</Link>:"Unassigned"}</td>
+        <td>{(t.leads as any)?.event_date||"Not set"}</td><td>{t.due_date||"Not set"}</td><td><span className="badge">{t.completed?"Completed":"Open"}</span></td>
         <td><form action={toggleTaskFromList.bind(null,t.id,t.completed)}><button className="btn btn-light" type="submit">{t.completed?"Reopen":"Complete"}</button></form></td>
       </tr>)}</tbody>
     </table></section>

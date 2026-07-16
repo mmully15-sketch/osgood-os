@@ -101,8 +101,8 @@ export default async function EventDetailPage({params}:{params:Promise<{id:strin
             <div><label>End Time</label><input name="end_time" type="time" defaultValue={timePart(event.end_at)}/></div>
             <div><label>Estimated Guests</label><input name="guest_count" type="number" min="0" defaultValue={event.guest_count||0}/></div>
             <div><label>Final Guest Count</label><input name="final_guest_count" type="number" min="0" defaultValue={event.final_guest_count||""}/></div>
-            <div><label>Primary Contact</label><input name="primary_contact" defaultValue={event.primary_contact||event.leads?.name||""}/></div>
-            <div><label>Primary Phone</label><input name="primary_phone" defaultValue={event.primary_phone||event.leads?.phone||""}/></div>
+            <div><label>Primary Contact</label><input name="primary_contact" defaultValue={event.primary_contact||(event.leads as any)?.name||""}/></div>
+            <div><label>Primary Phone</label><input name="primary_phone" defaultValue={event.primary_phone||(event.leads as any)?.phone||""}/></div>
             <div><label>Emergency Contact</label><input name="emergency_contact" defaultValue={event.emergency_contact||""}/></div>
             <div><label>Emergency Phone</label><input name="emergency_phone" defaultValue={event.emergency_phone||""}/></div>
             <div><label>Floor Plan Status</label>
