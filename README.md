@@ -1,31 +1,45 @@
-# Osgood OS v0.5
+# Osgood OS v0.6 Calendar & Event Operations
 
-This release adds the Venue Reference module.
+## New features
 
-## New tab
+- Shared monthly calendar
+- Weddings, private events, corporate events, tours, holds, maintenance, and other events
+- Linked client records
+- Event start and end times
+- Guest counts
+- Space assignments
+- Assigned staff
+- Vendor, setup, teardown, and internal notes
+- Operational checklist
+- Event timeline
+- Calendar events imported from current client records
+- Dashboard now shows upcoming calendar events
 
-`Venue Reference`
+## Required migration
 
-## Included information
+Run this file in Supabase SQL Editor before deploying:
 
-- Ballroom capacity, size, bar, mezzanine, and event uses
-- Grand Auditorium capacity, pipe organ, ceremony, and performance uses
-- Conference Room size, capacity, and event uses
-- Signature Celebration inclusions and pricing
-- Heritage Experience inclusions and pricing
-- Legacy Weekend inclusions and pricing
-- Common sales questions and answers
-- Parking and access guidance
-- Current contact information
+`supabase/migrations/004_calendar_event_operations.sql`
 
-## Database
+It creates:
 
-No new Supabase migration is required.
+- `events`
+- `event_checklist`
+- `event_timeline`
+- Row Level Security policies
+- Realtime for events
+- Calendar records for existing dated clients
+- Standard operating checklists
 
 ## Deploy
 
-Replace the project files in your local GitHub Desktop repository, commit, and push.
+After the migration succeeds:
+
+1. Replace your local GitHub Desktop repository files with this release.
+2. Commit.
+3. Push origin.
+4. Vercel deploys automatically.
 
 Suggested commit:
 
-`Add venue reference module`
+`Add calendar and event operations`
