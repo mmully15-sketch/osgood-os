@@ -38,6 +38,7 @@ const itemCatalog=[
   {type:"dessert",label:"Dessert Table",width:48,height:20,shape:"rect" as const,seats:0,linenSize:'90" × 132"'},
   {type:"gift",label:"Gift Table",width:40,height:20,shape:"rect" as const,seats:0,linenSize:'90" × 132"'},
   {type:"photo",label:"Photo Booth",width:52,height:40,shape:"rect" as const,seats:0,linenSize:"None"},
+  {type:"stage",label:"Stage",width:220,height:58,shape:"rect" as const,seats:0,linenSize:"None"},
 ];
 
 const colors=["White","Ivory","Black","Champagne","Navy","Sage","Burgundy","Dusty Rose","Other"];
@@ -125,7 +126,7 @@ export default function FloorPlanner({plan,events}:{plan:any;events:EventOption[
 
     function move(ev:PointerEvent){
       const nx=Math.max(0,Math.min(CANVAS_W-item.width,originalX+(ev.clientX-startX)*scaleX));
-      const ny=Math.max(92,Math.min(CANVAS_H-item.height,originalY+(ev.clientY-startY)*scaleY));
+      const ny=Math.max(28,Math.min(CANVAS_H-item.height,originalY+(ev.clientY-startY)*scaleY));
       setItems(prev=>prev.map(i=>i.id===item.id?{...i,x:Math.round(nx/4)*4,y:Math.round(ny/4)*4}:i));
     }
     function up(){
@@ -233,7 +234,6 @@ export default function FloorPlanner({plan,events}:{plan:any;events:EventOption[
             <div className="door door-1">DOUBLE DOORS</div>
             <div className="door door-2">DOUBLE DOORS</div>
             <div className="door door-3">DOUBLE DOORS</div>
-            <div className="fixed-stage">STAGE</div>
             <div className="fixed-bar">FIXED BAR<br/><small>SE CORNER</small></div>
             {items.map(item=><button
               type="button"
