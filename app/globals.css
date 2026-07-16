@@ -100,3 +100,28 @@ th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute
   .event-meta-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .timeline-row{grid-template-columns:90px 1fr}
 }
+
+.workflow-bar{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:16px 0}
+.workflow-step{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px;text-align:center;font-size:12px;font-weight:800}
+.workflow-step.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.workflow-step.complete{background:#e3f0e8;color:#275c42;border-color:#c8dfd1}
+.progress-track{height:10px;background:#ebe5db;border-radius:999px;overflow:hidden}
+.progress-fill{height:100%;background:var(--gold);border-radius:999px}
+.section-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+.section-card h3{font-family:Georgia,serif;margin:0 0 10px}
+.check-group{margin-top:14px}.check-group h4{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.vendor-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.vendor-card{border:1px solid var(--line);border-radius:12px;padding:12px;background:#faf8f4}
+.vendor-card h4{margin:0 0 5px}
+.room-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.room-card{border:1px solid var(--line);border-radius:12px;padding:12px}
+.assignment-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.assignment-card{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
+.ops-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.ops-metric{background:#f7f3ec;border:1px solid var(--line);border-radius:12px;padding:12px}
+.ops-metric b{display:block;font-family:Georgia,serif;font-size:26px}
+.status-select{max-width:220px}
+@media(max-width:900px){
+  .workflow-bar{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .vendor-grid,.room-grid,.assignment-grid,.ops-summary{grid-template-columns:1fr}
+}

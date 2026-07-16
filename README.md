@@ -1,45 +1,33 @@
-# Osgood OS v0.6 Calendar & Event Operations
+# Osgood OS v0.7 Event Detail Workflow
 
-## New features
+## New event workflow features
 
-- Shared monthly calendar
-- Weddings, private events, corporate events, tours, holds, maintenance, and other events
-- Linked client records
-- Event start and end times
-- Guest counts
-- Space assignments
-- Assigned staff
-- Vendor, setup, teardown, and internal notes
-- Operational checklist
-- Event timeline
-- Calendar events imported from current client records
-- Dashboard now shows upcoming calendar events
+- Workflow stages: Planning, Contracted, Finalizing, Event Ready, Event Day, Completed
+- Readiness percentage
+- Final guest count
+- Primary and emergency contacts
+- Floor-plan status
+- Event-day role assignments
+- Grouped operations checklist
+- Checklist due dates, responsible staff, and notes
+- Vendor directory with arrival/departure times
+- Room setup records
+- Timeline management
+- Setup, teardown, incident, and internal notes
+- Post-event checklist items
 
 ## Required migration
 
-Run this file in Supabase SQL Editor before deploying:
+Run:
 
-`supabase/migrations/004_calendar_event_operations.sql`
+`supabase/migrations/005_event_detail_workflow.sql`
 
-It creates:
+before deploying the updated app.
 
-- `events`
-- `event_checklist`
-- `event_timeline`
-- Row Level Security policies
-- Realtime for events
-- Calendar records for existing dated clients
-- Standard operating checklists
+## Deployment
 
-## Deploy
-
-After the migration succeeds:
-
-1. Replace your local GitHub Desktop repository files with this release.
-2. Commit.
-3. Push origin.
-4. Vercel deploys automatically.
+Replace your local GitHub Desktop repository files with this release, commit, and push.
 
 Suggested commit:
 
-`Add calendar and event operations`
+`Expand event workflow and operations checklist`
