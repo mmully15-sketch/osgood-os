@@ -15,6 +15,7 @@ export default async function AppNav(){
       <Link href="/app">Dashboard</Link>
       <Link href="/app/leads">Clients</Link>
       <Link href="/app/calculator">Pricing Calculator</Link>
+      <Link href="/app/reference">Venue Reference</Link>
       <Link href="/app/tasks">Tasks</Link>
       <Link href="/app/quotes">Quotes</Link>
       <Link href="/app/settings">Settings</Link>

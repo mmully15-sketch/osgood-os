@@ -1,31 +1,31 @@
-# Osgood OS v0.4
+# Osgood OS v0.5
 
-This release combines the interface overhaul, the pricing calculator, and the current 2026 client/event schedule.
+This release adds the Venue Reference module.
 
-## New features
+## New tab
 
-- Modern Osgood-branded dashboard and navigation
-- Wedding package calculator
-- Corporate and private-event pricing calculator
-- Add-ons, discounts, deposit, and remaining-balance calculations
-- Select an existing client directly in the calculator
-- Save shared quotes to Supabase
-- Automatically mark selected leads as quoted
-- Redesigned dashboard with upcoming events, tasks, and quote value
-- Idempotent import of the 20 current events from Schedule 1.xlsm
+`Venue Reference`
 
-## Import the current client list
+## Included information
 
-Run this file once in Supabase SQL Editor:
+- Ballroom capacity, size, bar, mezzanine, and event uses
+- Grand Auditorium capacity, pipe organ, ceremony, and performance uses
+- Conference Room size, capacity, and event uses
+- Signature Celebration inclusions and pricing
+- Heritage Experience inclusions and pricing
+- Legacy Weekend inclusions and pricing
+- Common sales questions and answers
+- Parking and access guidance
+- Current contact information
 
-`supabase/migrations/003_import_current_clients.sql`
+## Database
 
-It uses fixed IDs and `on conflict`, so running it again updates the same records instead of duplicating them.
+No new Supabase migration is required.
 
 ## Deploy
 
-Replace your local GitHub Desktop repository files with this release, commit, and push.
+Replace the project files in your local GitHub Desktop repository, commit, and push.
 
 Suggested commit:
 
-`Add pricing calculator, current events, and new interface`
+`Add venue reference module`
