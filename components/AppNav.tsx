@@ -10,10 +10,11 @@ export default async function AppNav(){
     redirect("/login");
   }
   return <header className="topbar"><div className="topbar-inner">
-    <div className="brand">Osgood OS</div>
+    <div className="brand">The Osgood<small>Sales & Venue Operations</small></div>
     <nav className="nav">
       <Link href="/app">Dashboard</Link>
-      <Link href="/app/leads">Clients & Leads</Link>
+      <Link href="/app/leads">Clients</Link>
+      <Link href="/app/calculator">Pricing Calculator</Link>
       <Link href="/app/tasks">Tasks</Link>
       <Link href="/app/quotes">Quotes</Link>
       <Link href="/app/settings">Settings</Link>
