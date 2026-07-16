@@ -223,8 +223,8 @@ export default function FloorPlanner({plan,events}:{plan:any;events:EventOption[
 
       <main className="planner-main">
         <div className="print-plan-header">
-          <h1>{name}</h1>
-          <p>The Osgood Ballroom · 60' × 150' · Status: {status.replace("_"," ")}</p>
+          <img src="/osgood-logo.png" alt="The Osgood Wedding and Events"/>
+          <div><h1>{name}</h1><p>The Osgood Ballroom · 60' × 150' · Status: {status.replace("_"," ")}</p></div>
         </div>
 
         <div className="ballroom-wrap">

@@ -73,3 +73,18 @@ export async function toggleTask(taskId:string,leadId:string,completed:boolean){
   if(error) throw new Error(error.message);
   revalidatePath(`/app/leads/${leadId}`); revalidatePath("/app/tasks");
 }
+
+
+export async function toggleClientEventChecklist(itemId:string,eventId:string,leadId:string,completed:boolean){
+  const supabase=await createClient();
+  const {data:{user}}=await supabase.auth.getUser();
+  const {error}=await supabase.from("event_checklist").update({
+    completed:!completed,
+    completed_at:!completed?new Date().toISOString():null,
+    completed_by:!completed?user?.id:null
+  }).eq("id",itemId);
+  if(error) throw new Error(error.message);
+  revalidatePath(`/app/leads/${leadId}`);
+  revalidatePath(`/app/calendar/${eventId}`);
+  revalidatePath("/app");
+}

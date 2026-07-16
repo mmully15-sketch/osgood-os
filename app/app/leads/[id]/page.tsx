@@ -1,15 +1,17 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { createTaskForLead, deleteLead, toggleTask, updateLead } from "../actions";
+import { createTaskForLead, deleteLead, toggleClientEventChecklist, toggleTask, updateLead } from "../actions";
 
 export default async function LeadDetailPage({params}:{params:Promise<{id:string}>}){
   const {id}=await params;
   const supabase=await createClient();
-  const [{data:lead,error},{data:tasks},{data:quotes},{data:activity}]=await Promise.all([
+  const [{data:lead,error},{data:tasks},{data:quotes},{data:activity},{data:events}]=await Promise.all([
     supabase.from("leads").select("*").eq("id",id).single(),
     supabase.from("tasks").select("*").eq("lead_id",id).order("due_date",{ascending:true,nullsFirst:false}),
     supabase.from("quotes").select("*").eq("lead_id",id).order("created_at",{ascending:false}),
-    supabase.from("activity_log").select("*").order("created_at",{ascending:false}).limit(12)
+    supabase.from("activity_log").select("*").order("created_at",{ascending:false}).limit(12),
+    supabase.from("events").select("id,title,start_at,status,workflow_stage,event_checklist(*)").eq("lead_id",id).order("start_at",{ascending:true})
   ]);
   if(error||!lead) notFound();
 
@@ -41,6 +43,48 @@ export default async function LeadDetailPage({params}:{params:Promise<{id:string
         <section className="card" style={{marginTop:16}}><h2>Quotes</h2>
           {quotes?.length?<table><thead><tr><th>Quote</th><th>Status</th><th>Total</th><th>Balance</th></tr></thead>
           <tbody>{quotes.map(q=><tr key={q.id}><td>{q.quote_number}</td><td><span className="badge">{q.status}</span></td><td>${Number(q.total||0).toLocaleString()}</td><td>${Number(q.balance||0).toLocaleString()}</td></tr>)}</tbody></table>:<p className="muted">No quotes saved for this client yet.</p>}
+        </section>
+        <section className="card client-operations-card" style={{marginTop:16}}>
+          <div className="card-heading">
+            <div><span className="eyebrow">Calendar Workflow</span><h2>Event Operations Tasks</h2></div>
+            <span className="muted">{(events??[]).length} linked event{(events??[]).length===1?"":"s"}</span>
+          </div>
+          {(events??[]).map(event=>{
+            const checklist=event.event_checklist??[];
+            const complete=checklist.filter((item:any)=>item.completed).length;
+            const pct=checklist.length?Math.round((complete/checklist.length)*100):0;
+            const grouped=checklist.reduce((acc:any,item:any)=>{
+              (acc[item.category||"General"]??=[]).push(item);
+              return acc;
+            },{});
+            return <div className="client-event-workflow" key={event.id}>
+              <div className="client-event-header">
+                <div>
+                  <h3>{event.title}</h3>
+                  <div className="muted">{new Date(event.start_at).toLocaleDateString()} · {event.workflow_stage||event.status}</div>
+                </div>
+                <div className="client-event-progress">
+                  <b>{complete}/{checklist.length}</b>
+                  <span>{pct}% complete</span>
+                  <Link className="link-button" href={`/app/calendar/${event.id}`}>Open Event</Link>
+                </div>
+              </div>
+              <div className="progress-track"><div className="progress-fill" style={{width:`${pct}%`}}/></div>
+              {Object.entries(grouped).map(([category,items]:any)=><div className="client-task-group" key={category}>
+                <h4>{category}</h4>
+                <div className="client-checklist">
+                  {items.map((item:any)=><form action={toggleClientEventChecklist.bind(null,item.id,event.id,id,item.completed)} key={item.id}>
+                    <button className={`client-check-task ${item.completed?"done":""}`} type="submit">
+                      <span className="check-symbol">{item.completed?"✓":"○"}</span>
+                      <span><b>{item.label}</b><small>{item.responsible_staff||"Unassigned"}{item.due_date?` · Due ${item.due_date}`:""}</small></span>
+                    </button>
+                  </form>)}
+                </div>
+              </div>)}
+              {!checklist.length&&<p className="muted">No event operations checklist has been created for this event.</p>}
+            </div>
+          })}
+          {!events?.length&&<p className="muted">No calendar event is linked to this client yet. Create or link the event from the Calendar tab to populate the full operations checklist here.</p>}
         </section>
       </div>
       <aside>
