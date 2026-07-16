@@ -45,39 +45,78 @@ export default async function QuoteDetailPage({params}:{params:Promise<{id:strin
       <div className="span-8">
         <article className="proposal-shell">
           <header className="proposal-header">
-            <h1>The Osgood</h1>
-            <p>Wedding and Events Venue · 614 Center Avenue, Bay City, Michigan</p>
+            <img src="/osgood-logo.png" alt="The Osgood Wedding and Events"/>
+            <div className="proposal-document-title">
+              <span>Private Event Proposal</span>
+              <b>{q.quote_number}</b>
+            </div>
           </header>
+
+          <div className="proposal-gold-rule"/>
+
           <div className="proposal-body">
-            <h2 style={{fontFamily:"Georgia,serif"}}>Event Proposal</h2>
+            <section className="proposal-intro">
+              <span className="eyebrow">Prepared Exclusively For</span>
+              <h1>{q.client_name}</h1>
+              <p>Thank you for considering The Osgood for your celebration. This proposal reflects the venue experience and selections discussed for your event.</p>
+            </section>
+
             <div className="proposal-meta">
-              <div><label>Prepared For</label><b>{q.client_name}</b><br/>{q.client_email||""}</div>
-              <div><label>Quote Number</label><b>{q.quote_number}</b><br/>Status: {q.status}</div>
-              <div><label>Event</label><b>{q.event_type||"Event"}</b><br/>{q.event_date||"Date not set"}</div>
-              <div><label>Valid Through</label><b>{q.valid_through||"Not specified"}</b></div>
+              <div><label>Event</label><b>{q.event_type||"Event"}</b><span>{q.event_date||"Date not set"}</span></div>
+              <div><label>Contact</label><b>{q.client_email||"Email not provided"}</b><span>{(q.leads as any)?.phone||""}</span></div>
+              <div><label>Proposal Status</label><b className="proposal-status">{q.status}</b><span>Valid through {q.valid_through||"date not specified"}</span></div>
             </div>
 
-            <table className="line-items">
-              <thead><tr><th>Description</th><th style={{textAlign:"right"}}>Amount</th></tr></thead>
-              <tbody>
-                {lineItems.map((x,i)=><tr key={i}><td>{x.label}</td><td style={{textAlign:"right"}}>{money(x.amount)}</td></tr>)}
-                {Number(payload.calculation?.discountAmount||0)>0&&<tr><td>Discount</td><td style={{textAlign:"right"}}>-{money(payload.calculation.discountAmount)}</td></tr>}
-                <tr><td className="proposal-total">Total Investment</td><td className="proposal-total" style={{textAlign:"right"}}>{money(q.total)}</td></tr>
-              </tbody>
-            </table>
+            <section className="proposal-section">
+              <div className="proposal-section-heading">
+                <span>01</span><h2>Your Investment</h2>
+              </div>
+              <table className="line-items">
+                <thead><tr><th>Description</th><th style={{textAlign:"right"}}>Investment</th></tr></thead>
+                <tbody>
+                  {lineItems.map((x,i)=><tr key={i}><td>{x.label}</td><td style={{textAlign:"right"}}>{money(x.amount)}</td></tr>)}
+                  {Number(payload.calculation?.discountAmount||0)>0&&<tr><td>Courtesy Discount</td><td style={{textAlign:"right"}}>-{money(payload.calculation.discountAmount)}</td></tr>}
+                </tbody>
+              </table>
+              <div className="proposal-total-box">
+                <span>Total Venue Investment</span><b>{money(q.total)}</b>
+              </div>
+            </section>
 
-            {q.proposal_notes&&<section style={{marginTop:24}}><h3>Proposal Notes</h3><p>{q.proposal_notes}</p></section>}
-            {payload.notes&&<section style={{marginTop:20}}><h3>Event Notes</h3><p>{payload.notes}</p></section>}
-            <section style={{marginTop:24}}>
-              <h3>Payment Summary</h3>
-              <p><b>Paid:</b> {money(paid)}<br/><b>Remaining Balance:</b> {money(q.balance)}</p>
+            <section className="proposal-section">
+              <div className="proposal-section-heading">
+                <span>02</span><h2>Payment Summary</h2>
+              </div>
+              <div className="proposal-payment-grid">
+                <div><label>Deposit</label><b>{money(q.deposit)}</b></div>
+                <div><label>Payments Received</label><b>{money(paid)}</b></div>
+                <div className="balance"><label>Remaining Balance</label><b>{money(q.balance)}</b></div>
+              </div>
+              {(schedules??[]).length>0&&<div className="proposal-schedule">
+                {(schedules??[]).map(s=><div key={s.id}><span>{s.label}</span><b>{money(s.amount)}</b><small>{s.due_date?`Due ${s.due_date}`:"Due date to be determined"}</small></div>)}
+              </div>}
             </section>
-            <section style={{marginTop:24}}>
-              <h3>Terms</h3>
+
+            {(q.proposal_notes||payload.notes)&&<section className="proposal-section">
+              <div className="proposal-section-heading"><span>03</span><h2>Event Notes</h2></div>
+              {q.proposal_notes&&<p>{q.proposal_notes}</p>}
+              {payload.notes&&<p>{payload.notes}</p>}
+            </section>}
+
+            <section className="proposal-section proposal-terms">
+              <div className="proposal-section-heading"><span>{(q.proposal_notes||payload.notes)?"04":"03"}</span><h2>Terms & Next Steps</h2></div>
               <p>{q.terms||"This proposal is subject to venue availability, final contract execution, and the payment schedule established by The Osgood."}</p>
+              <div className="proposal-signature-grid">
+                <div><span>Client Acceptance</span><div className="signature-line"/><small>Signature</small></div>
+                <div><span>Date</span><div className="signature-line"/><small>Date</small></div>
+              </div>
             </section>
-            <p className="muted" style={{fontSize:12,marginTop:28}}>The Osgood Wedding and Events Venue · 989-214-3733 · info@theosgood.com</p>
           </div>
+
+          <footer className="proposal-footer">
+            <div><b>The Osgood Wedding & Events</b><span>A Bay City landmark reimagined</span></div>
+            <div><span>614 Center Avenue · Bay City, Michigan</span><span>989-214-3733 · info@theosgood.com · theosgood.com</span></div>
+          </footer>
         </article>
       </div>
 

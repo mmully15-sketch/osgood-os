@@ -69,83 +69,106 @@ export default async function Dashboard(){
   const paymentAlerts=(paymentSchedules??[]).filter(p=>p.due_date&&p.due_date<=today);
 
   return <>
-    <section className="hero">
-      <h1>Operations Command Center</h1>
-      <p>Live view of today’s events, upcoming readiness, outstanding work, staff assignments, vendors, quotes, and client activity.</p>
-      <div className="actions" style={{marginTop:16}}>
-        <Link className="btn btn-primary" href="/app/calendar">Open Calendar</Link>
-        <Link className="btn btn-gold" href="/app/calculator">Create Quote</Link>
-        <Link className="btn btn-light" href="/app/leads">Client Records</Link>
+    <section className="dashboard-hero">
+      <div className="dashboard-brand-panel">
+        <img className="dashboard-logo" src="/osgood-logo.png" alt="The Osgood Wedding and Events"/>
       </div>
-
-      <div className="command-strip">
-        <div className="command-card"><span className="muted">Today’s Events</span><b>{todayEvents?.length||0}</b></div>
-        <div className="command-card"><span className="muted">Tasks Due Today</span><b>{dueToday.length}</b></div>
-        <div className="command-card"><span className="muted">Overdue Tasks</span><b>{overdue.length}</b></div>
-        <div className="command-card"><span className="muted">Active Leads</span><b>{activeLeads??0}</b></div>
+      <div className="dashboard-welcome">
+        <span className="eyebrow">Venue Operations</span>
+        <h1>Welcome to The Osgood</h1>
+        <p>Manage today’s events, client follow-ups, payment milestones, and operational readiness from one command center.</p>
+        <div className="actions dashboard-actions">
+          <Link className="btn btn-gold" href="/app/calendar">View Calendar</Link>
+          <Link className="btn btn-primary" href="/app/calculator">Create Proposal</Link>
+          <Link className="btn btn-light" href="/app/leads">Open Clients</Link>
+        </div>
       </div>
     </section>
 
+    <section className="executive-metrics">
+      <Link href="/app/calendar" className="executive-metric">
+        <span>Today’s Events</span><b>{todayEvents?.length||0}</b><small>View event-day details</small>
+      </Link>
+      <Link href="/app/tasks" className="executive-metric">
+        <span>Due Today</span><b>{dueToday.length}</b><small>Tasks requiring attention</small>
+      </Link>
+      <Link href="/app/tasks" className={`executive-metric ${overdue.length?"metric-alert":""}`}>
+        <span>Overdue</span><b>{overdue.length}</b><small>Past-due assignments</small>
+      </Link>
+      <Link href="/app/leads" className="executive-metric">
+        <span>Active Clients</span><b>{activeLeads??0}</b><small>Open sales opportunities</small>
+      </Link>
+      <Link href="/app/quotes" className="executive-metric">
+        <span>Open Proposals</span><b>{pendingQuotes.length}</b><small>{quoteValue.toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0})} total value</small>
+      </Link>
+    </section>
+
     <div className="dashboard-grid">
-      <section className="dash-card dash-span-7">
-        <h2>Today</h2>
+      <section className="dash-card dash-span-7 featured-card">
+        <div className="card-heading"><div><span className="eyebrow">Schedule</span><h2>Today at The Osgood</h2></div><Link href="/app/calendar">Full calendar →</Link></div>
         <div className="mini-calendar">
           {(todayEvents??[]).map(e=><Link href={`/app/calendar/${e.id}`} className="mini-event" key={e.id}>
             <div className="mini-date">{new Date(e.start_at).toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"})}</div>
-            <div>
+            <div className="mini-event-copy">
               <b>{e.title}</b>
               <div className="muted">{e.event_type} · {e.guest_count||0} guests</div>
             </div>
             <span className="badge">{e.status}</span>
           </Link>)}
-          {!todayEvents?.length&&<div className="empty-state">No events scheduled today.</div>}
+          {!todayEvents?.length&&<div className="empty-state">No events are scheduled today.</div>}
         </div>
       </section>
 
       <section className="dash-card dash-span-5">
-        <h2>Tomorrow</h2>
+        <div className="card-heading"><div><span className="eyebrow">Next Up</span><h2>Tomorrow</h2></div></div>
         <div className="mini-calendar">
           {(tomorrowEvents??[]).map(e=><Link href={`/app/calendar/${e.id}`} className="mini-event" key={e.id}>
             <div className="mini-date">{new Date(e.start_at).toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"})}</div>
-            <div><b>{e.title}</b><div className="muted">{e.event_type}</div></div>
+            <div className="mini-event-copy"><b>{e.title}</b><div className="muted">{e.event_type}</div></div>
           </Link>)}
-          {!tomorrowEvents?.length&&<div className="empty-state">No events scheduled tomorrow.</div>}
+          {!tomorrowEvents?.length&&<div className="empty-state">No events are scheduled tomorrow.</div>}
         </div>
       </section>
 
       <section className="dash-card dash-span-7">
-        <h2>Upcoming Event Readiness</h2>
+        <div className="card-heading"><div><span className="eyebrow">Readiness</span><h2>Upcoming Events</h2></div><span className="muted">Next 30 days</span></div>
+        <div className="readiness-list">
         {(upcomingEvents??[]).map(e=>{
           const pct=readiness(e.event_checklist||[]);
           return <Link href={`/app/calendar/${e.id}`} className="readiness-row" key={e.id}>
-            <div>
+            <div className="readiness-copy">
               <b>{e.title}</b>
-              <div className="muted">{new Date(e.start_at).toLocaleDateString()} · {e.workflow_stage||"planning"} · {e.event_manager||"No event manager"}</div>
+              <div className="muted">{new Date(e.start_at).toLocaleDateString()} · {e.workflow_stage||"planning"} · {e.event_manager||"Manager unassigned"}</div>
               <div className="readiness-bar"><div className="readiness-fill" style={{width:`${pct}%`}}/></div>
             </div>
             <strong>{pct}%</strong>
           </Link>
         })}
         {!upcomingEvents?.length&&<div className="empty-state">No upcoming events in the next 30 days.</div>}
+        </div>
       </section>
 
-      <section className="dash-card dash-span-5">
-        <h2>Urgent Attention</h2>
+      <section className="dash-card dash-span-5 attention-card">
+        <div className="card-heading"><div><span className="eyebrow">Priority</span><h2>Needs Attention</h2></div></div>
         <div className="alert-list">
-          {overdue.slice(0,5).map(t=><div className="alert-item danger" key={t.id}>
+          {overdue.slice(0,4).map(t=><div className="alert-item danger" key={t.id}>
             <div><b>{t.title}</b><div className="meta">{(t.leads as any)?.name||"Unassigned"} · Due {t.due_date}</div></div>
             <span className="badge">Overdue</span>
           </div>)}
-          {dueToday.slice(0,5).map(t=><div className="alert-item warning" key={t.id}>
+          {dueToday.slice(0,4).map(t=><div className="alert-item warning" key={t.id}>
             <div><b>{t.title}</b><div className="meta">{(t.leads as any)?.name||"Unassigned"}</div></div>
             <span className="badge">Today</span>
           </div>)}
-          {!overdue.length&&!dueToday.length&&<div className="alert-item success"><div><b>No urgent task alerts</b><div className="meta">Everything due today is clear.</div></div></div>}
+          {paymentAlerts.slice(0,3).map(p=><Link href={`/app/quotes/${p.quote_id}`} className={`alert-item ${p.due_date<today?"danger":"warning"}`} key={p.id}>
+            <div><b>{(p.quotes as any)?.client_name||"Client"} payment</b><div className="meta">{p.label} · Due {p.due_date}</div></div>
+            <span className="badge">${Number(p.amount||0).toLocaleString()}</span>
+          </Link>)}
+          {!overdue.length&&!dueToday.length&&!paymentAlerts.length&&<div className="alert-item success"><div><b>Everything is on track</b><div className="meta">No urgent task or payment alerts.</div></div></div>}
         </div>
       </section>
 
       <section className="dash-card dash-span-4">
-        <h2>Walkthroughs Needed</h2>
+        <div className="card-heading"><div><span className="eyebrow">Planning</span><h2>Walkthroughs</h2></div></div>
         <div className="alert-list">
           {(walkthroughItems??[]).map(w=><Link href={`/app/calendar/${w.event_id}`} className="alert-item warning" key={w.id}>
             <div><b>{(w.events as any)?.title||"Event"}</b><div className="meta">{w.due_date?`Due ${w.due_date}`:"No due date set"}</div></div>
@@ -155,7 +178,7 @@ export default async function Dashboard(){
       </section>
 
       <section className="dash-card dash-span-4">
-        <h2>Unconfirmed Vendors</h2>
+        <div className="card-heading"><div><span className="eyebrow">Partners</span><h2>Vendor Confirmations</h2></div></div>
         <div className="alert-list">
           {(unconfirmedVendors??[]).map(v=><Link href={`/app/calendar/${v.event_id}`} className="alert-item warning" key={v.id}>
             <div><b>{v.company_name}</b><div className="meta">{v.vendor_type} · {(v.events as any)?.title||"Event"}</div></div>
@@ -164,46 +187,29 @@ export default async function Dashboard(){
         </div>
       </section>
 
-      <section className="dash-card dash-span-4">
-        <h2>Sales Snapshot</h2>
+      <section className="dash-card dash-span-4 dark-card">
+        <div className="card-heading"><div><span className="eyebrow">Sales</span><h2>Pipeline Snapshot</h2></div></div>
         <div className="assignment-list">
-          <div className="assignment-row"><span>Open quotes</span><b>{pendingQuotes.length}</b></div>
-          <div className="assignment-row"><span>Total quote value</span><b>${quoteValue.toLocaleString()}</b></div>
-          <div className="assignment-row"><span>Active leads</span><b>{activeLeads??0}</b></div>
+          <div className="assignment-row"><span>Open proposals</span><b>{pendingQuotes.length}</b></div>
+          <div className="assignment-row"><span>Proposal value</span><b>${quoteValue.toLocaleString()}</b></div>
+          <div className="assignment-row"><span>Active clients</span><b>{activeLeads??0}</b></div>
           <div className="assignment-row"><span>Upcoming events</span><b>{upcomingEvents?.length||0}</b></div>
         </div>
       </section>
 
       <section className="dash-card dash-span-6">
-        <h2>Event-Day Assignments</h2>
+        <div className="card-heading"><div><span className="eyebrow">Staffing</span><h2>Event-Day Assignments</h2></div></div>
         <div className="assignment-list">
           {(todayEvents??[]).map(e=><div className="assignment-row" key={e.id}>
-            <div>
-              <b>{e.title}</b>
-              <div className="muted">Manager: {e.event_manager||"Unassigned"}</div>
-            </div>
-            <div style={{textAlign:"right"}}>
-              <div>Setup: {e.setup_lead||"Unassigned"}</div>
-              <div>Security: {e.security_lead||"Unassigned"}</div>
-            </div>
+            <div><b>{e.title}</b><div className="muted">Manager: {e.event_manager||"Unassigned"}</div></div>
+            <div className="assignment-right"><div>Setup: {e.setup_lead||"Unassigned"}</div><div>Security: {e.security_lead||"Unassigned"}</div></div>
           </div>)}
           {!todayEvents?.length&&<div className="empty-state">No event-day assignments today.</div>}
         </div>
       </section>
 
       <section className="dash-card dash-span-6">
-        <h2>Payment Alerts</h2>
-        <div className="alert-list">
-          {(paymentAlerts??[]).map(p=><Link href={`/app/quotes/${p.quote_id}`} className={`alert-item ${p.due_date<today?"danger":"warning"}`} key={p.id}>
-            <div><b>{(p.quotes as any)?.client_name||"Client"}</b><div className="meta">{p.label} · Due {p.due_date}</div></div>
-            <span className="badge">${Number(p.amount||0).toLocaleString()}</span>
-          </Link>)}
-          {!paymentAlerts?.length&&<div className="empty-state">No payments due or overdue today.</div>}
-        </div>
-      </section>
-
-      <section className="dash-card dash-span-6">
-        <h2>Recent Activity</h2>
+        <div className="card-heading"><div><span className="eyebrow">Activity</span><h2>Recent Updates</h2></div></div>
         <div className="alert-list">
           {(recentActivity??[]).map(a=><div className="alert-item" key={a.id}>
             <div><b>{a.description}</b><div className="meta">{new Date(a.created_at).toLocaleString()}</div></div>
