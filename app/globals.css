@@ -125,3 +125,43 @@ th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute
   .workflow-bar{grid-template-columns:repeat(3,minmax(0,1fr))}
   .vendor-grid,.room-grid,.assignment-grid,.ops-summary{grid-template-columns:1fr}
 }
+/* Osgood OS Ballroom Floor Planner additions */
+.planner-meta{display:grid;grid-template-columns:2fr 2fr 1fr 2fr;gap:12px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:16px}
+.planner-layout{display:grid;grid-template-columns:270px minmax(0,1fr);gap:16px;align-items:start}
+.planner-sidebar{position:sticky;top:12px;display:grid;gap:12px}
+.planner-panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px}
+.planner-panel h3{font-family:Georgia,serif;margin:0 0 10px}
+.planner-panel label{margin-top:9px}
+.planner-tools{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.planner-tools button{border:1px solid var(--line);background:#f8f5ef;border-radius:9px;padding:8px 6px;font-size:11px;font-weight:700;cursor:pointer}
+.planner-tools button:hover{background:var(--gold-soft)}
+.planner-stat{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:8px 0}.planner-stat:last-child{border-bottom:0}
+.planner-delete{width:100%;margin-top:10px;background:#f4dfdc;color:#8b3933}
+.planner-main{min-width:0}
+.ballroom-wrap{overflow:auto;border-radius:16px;border:1px solid var(--line);background:#d8d1c7;padding:18px;display:flex;justify-content:center;align-items:flex-start}
+.ballroom-canvas{width:520px;height:1300px;position:relative;overflow:hidden;background-color:#f6f1e8;background-image:linear-gradient(rgba(70,61,51,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(70,61,51,.08) 1px,transparent 1px);background-size:16px 16px;border:4px solid #332c25;box-sizing:border-box;touch-action:none}
+.room-label{position:absolute;left:12px;bottom:8px;font-size:10px;font-weight:800;letter-spacing:.08em;color:#766b5f}
+.north-label{position:absolute;top:4px;left:50%;transform:translateX(-50%);font-size:9px;font-weight:800;color:#84776a;z-index:4}
+.door{position:absolute;top:-1px;width:72px;height:24px;background:#d8c5a4;border:2px solid #332c25;border-top:0;font-size:8px;font-weight:800;text-align:center;padding-top:5px;z-index:5}
+.door-1{left:10%}.door-2{left:50%;transform:translateX(-50%)}.door-3{right:10%}
+.fixed-stage{position:absolute;left:12%;top:30px;width:76%;height:78px;background:linear-gradient(#6a5240,#49382c);color:#fff;border:3px solid #2d211a;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:20px;font-weight:700;letter-spacing:.05em;z-index:3;box-shadow:0 4px 9px rgba(0,0,0,.18)}
+.fixed-stage:after{content:"";position:absolute;left:42%;bottom:-18px;width:16%;height:18px;background:#5c4637;border:2px solid #2d211a;border-top:0}
+.fixed-bar{position:absolute;right:0;bottom:0;width:128px;height:94px;background:#5b4637;color:#fff;border:3px solid #2d211a;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;font-weight:900;text-align:center;z-index:2}
+.plan-item{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;border:2px solid #6b5a48;background:#fdfbf7;color:#2c2824;font-size:8px;font-weight:800;line-height:1.1;text-align:center;padding:2px;cursor:grab;user-select:none;touch-action:none;box-shadow:0 2px 5px rgba(0,0,0,.12)}
+.plan-item:active{cursor:grabbing}.plan-item.round{border-radius:50%}.plan-item.selected{outline:3px solid #b88a3b;z-index:5}.plan-item.collision{border-color:#b9473e;background:#fff0ee}
+.plan-item small{font-size:7px;font-weight:600;margin-top:2px}
+.type-dance{background:#e7dfd1;border-style:dashed}.type-dj{background:#e3e0e9}.type-buffet{background:#e8efe6}.type-sweetheart,.type-head{background:#f2e2e5}
+.planner-warning{margin-top:10px;border:1px solid #dfb1aa;background:#fff3f1;color:#8a3731;padding:10px;border-radius:10px;font-weight:700}
+.planner-report{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-top:16px}
+.planner-report>div{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}
+.planner-report h2{font-family:Georgia,serif;margin-top:0}
+.linen-list{display:grid;gap:8px}.linen-list>div{display:grid;grid-template-columns:48px 1fr;gap:8px;padding:8px;border-bottom:1px solid var(--line)}
+.planner-message{background:#eef7f1;border:1px solid #c8dfd0;padding:9px;border-radius:10px}
+.print-plan-header{display:none}
+@media(max-width:1000px){.planner-meta{grid-template-columns:1fr 1fr}.planner-layout{grid-template-columns:1fr}.planner-sidebar{position:static;grid-template-columns:1fr 1fr}.planner-report{grid-template-columns:1fr}}
+@media(max-width:650px){.planner-meta,.planner-sidebar{grid-template-columns:1fr}.planner-tools{grid-template-columns:1fr 1fr}.ballroom-canvas{width:384px;height:960px}.fixed-stage{height:58px;font-size:16px}.fixed-bar{width:96px;height:72px}}
+@media print{
+  .topbar,.hero,.planner-meta,.planner-sidebar,.planner-warning{display:none!important}
+  .shell{max-width:none;padding:0}.planner-layout{display:block}.ballroom-wrap{overflow:visible;border:0;padding:0;background:#fff}.ballroom-canvas{width:384px;height:960px;margin:0 auto}
+  .print-plan-header{display:block;margin-bottom:12px}.planner-report{grid-template-columns:2fr 1fr}.planner-report>div{box-shadow:none}
+}
