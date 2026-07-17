@@ -91,8 +91,8 @@ export default async function EventDetailPage({params}:{params:Promise<{id:strin
           return <article className={`event-assignment-card ${remaining===0?"staffed":"needs-staff"}`} key={role.key}>
             <div className="event-assignment-card-head">
               <div>
-                <h3>{role.label}</h3>
-                <p>{role.description}</p>
+                <div className={`assignment-role-mark role-${role.key}`} aria-hidden="true">{role.label.slice(0,1)}</div><div><h3>{role.label}</h3>
+                <p>{role.description}</p></div>
               </div>
               <span className="assignment-count">{roleAssignments.length}/2 minimum</span>
             </div>
@@ -100,11 +100,12 @@ export default async function EventDetailPage({params}:{params:Promise<{id:strin
             <div className="assigned-person-list">
               {roleAssignments.map((assignment:any)=>{
                 const profile=Array.isArray(assignment.profiles)?assignment.profiles[0]:assignment.profiles;
+                const displayName=profile?.full_name||"Name not set";
                 return <div className="assigned-person" key={assignment.id}>
-                  <div className="assigned-person-avatar">{(profile?.full_name||profile?.email||"?").slice(0,1).toUpperCase()}</div>
-                  <div><b>{profile?.full_name||profile?.email||"Team member"}</b><small>{profile?.email||""}</small></div>
+                  <div className="assigned-person-avatar">{displayName.slice(0,1).toUpperCase()}</div>
+                  <div className="assigned-person-copy"><b>{displayName}</b><small>Assigned team member</small></div>
                   <form action={removeEventDayStaff.bind(null,assignment.id,id)}>
-                    <button className="assignment-remove" type="submit" aria-label={`Remove ${profile?.full_name||"team member"}`}>Remove</button>
+                    <button className="assignment-remove" type="submit" aria-label={`Remove ${displayName}`}>Remove</button>
                   </form>
                 </div>
               })}
@@ -115,7 +116,7 @@ export default async function EventDetailPage({params}:{params:Promise<{id:strin
               <select name="profile_id" required defaultValue="">
                 <option value="" disabled>Add a team member...</option>
                 {(teamProfiles??[]).filter(profile=>!assignedIds.has(profile.id)).map(profile=><option value={profile.id} key={profile.id}>
-                  {profile.full_name||profile.email}
+                  {profile.full_name||"Name not set"}
                 </option>)}
               </select>
               <button className="btn btn-light" type="submit">Add</button>
