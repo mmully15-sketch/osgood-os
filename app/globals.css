@@ -480,3 +480,176 @@ th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute
   .proposal-acceptance{page-break-after:auto;break-after:auto}
   @page{size:letter portrait;margin:0}
 }
+/* Append this AFTER the existing proposal CSS in app/globals.css. */
+
+:root{
+  --proposal-green:#07352c;
+  --proposal-green-deep:#031f1a;
+  --proposal-charcoal:#171411;
+  --proposal-gold:#c89a47;
+  --proposal-gold-soft:#e0bf7d;
+  --proposal-ivory:#f5efe3;
+}
+
+.luxury-proposal{
+  background:var(--proposal-charcoal)!important;
+  box-shadow:0 28px 75px rgba(18,14,10,.25)!important;
+}
+
+.proposal-cover{
+  background:linear-gradient(145deg,var(--proposal-charcoal),var(--proposal-green-deep) 58%,#0b473b)!important;
+  color:#fff!important;
+}
+.proposal-cover:before{
+  background:
+    radial-gradient(circle at 78% 20%,rgba(200,154,71,.22),transparent 30%),
+    repeating-linear-gradient(45deg,rgba(255,255,255,.018) 0,rgba(255,255,255,.018) 1px,transparent 1px,transparent 14px)!important;
+}
+.proposal-cover-frame{
+  border:1px solid var(--proposal-gold)!important;
+  box-shadow:inset 0 0 0 7px rgba(200,154,71,.04)!important;
+}
+.proposal-brand img,
+.proposal-thank-you-copy img{
+  mix-blend-mode:screen!important;
+  filter:none!important;
+}
+.proposal-brand span,
+.proposal-cover-footer,
+.proposal-cover-copy b{
+  color:var(--proposal-gold-soft)!important;
+}
+.proposal-cover-copy h1{
+  color:#fff!important;
+  text-shadow:0 2px 18px rgba(0,0,0,.3)!important;
+}
+.proposal-cover-rule{
+  background:var(--proposal-gold)!important;
+}
+
+.proposal-page{
+  background:var(--proposal-ivory)!important;
+  color:#181512!important;
+}
+.proposal-page:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.22;
+  background:
+    radial-gradient(circle at 1px 1px,rgba(128,96,47,.18) 1px,transparent 0);
+  background-size:22px 22px;
+}
+.proposal-page>*{
+  position:relative;
+  z-index:1;
+}
+.proposal-page-number{
+  color:rgba(70,57,42,.22)!important;
+}
+.proposal-kicker,
+.proposal-section-heading span{
+  color:var(--proposal-gold)!important;
+}
+.proposal-page h2,
+.proposal-lead,
+.proposal-editorial-quote{
+  color:#201b16!important;
+}
+.proposal-editorial-quote{
+  border-left-color:var(--proposal-gold)!important;
+}
+.proposal-feature-grid{
+  background:#cdbd9f!important;
+  border-color:#cdbd9f!important;
+}
+.proposal-feature-grid div{
+  background:rgba(255,255,255,.58)!important;
+}
+.proposal-feature-grid span{
+  color:#85632e!important;
+}
+
+.proposal-dark-page{
+  background:linear-gradient(145deg,var(--proposal-green-deep),var(--proposal-green))!important;
+  color:#fff!important;
+}
+.proposal-dark-page:before{
+  background:
+    radial-gradient(circle at 80% 10%,rgba(200,154,71,.16),transparent 30%),
+    repeating-linear-gradient(45deg,rgba(255,255,255,.02) 0,rgba(255,255,255,.02) 1px,transparent 1px,transparent 15px)!important;
+}
+.proposal-dark-page h2{
+  color:#fff!important;
+}
+.proposal-dark-page .proposal-page-number{
+  color:rgba(224,191,125,.24)!important;
+}
+.proposal-inclusion-grid div{
+  border-top-color:rgba(224,191,125,.4)!important;
+}
+.proposal-inclusion-grid span{
+  color:var(--proposal-gold)!important;
+}
+.proposal-inclusion-grid p{
+  color:#eee4d7!important;
+}
+
+.luxury-line-items th{
+  color:#846329!important;
+  border-bottom-color:#bfae91!important;
+}
+.luxury-line-items td{
+  border-bottom-color:#ddd0bb!important;
+}
+.luxury-total{
+  background:linear-gradient(135deg,var(--proposal-green-deep),var(--proposal-green))!important;
+  border:1px solid var(--proposal-gold)!important;
+}
+.luxury-total span{
+  color:var(--proposal-gold-soft)!important;
+}
+.proposal-payment-grid div{
+  background:rgba(255,255,255,.4)!important;
+  border-color:#cbbb9d!important;
+}
+.proposal-payment-grid .balance{
+  background:var(--proposal-gold)!important;
+  color:#fff!important;
+}
+.proposal-payment-grid .balance span{
+  color:#fff!important;
+}
+.proposal-schedule div{
+  border-bottom-color:#d5c6ad!important;
+}
+
+.proposal-acceptance{
+  background:
+    linear-gradient(160deg,var(--proposal-ivory),#efe2cb)!important;
+}
+.signature-line{
+  border-bottom-color:#64584a!important;
+}
+.luxury-proposal-footer{
+  border-top-color:var(--proposal-gold)!important;
+}
+.luxury-proposal-footer b{
+  color:var(--proposal-green)!important;
+}
+
+.proposal-action-buttons .btn-gold{
+  background:linear-gradient(135deg,#a87931,var(--proposal-gold))!important;
+  color:#fff!important;
+  border-color:#a87931!important;
+}
+
+@media print{
+  html,body{background:#fff!important}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  .proposal-cover,.proposal-dark-page,.luxury-total,.proposal-payment-grid .balance{
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+}
