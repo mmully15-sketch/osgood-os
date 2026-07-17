@@ -44,7 +44,7 @@ export default async function Dashboard(){
       .gte("start_at",todayStart.toISOString()).lt("start_at",nextThirty.toISOString())
       .neq("status","cancelled").order("start_at").limit(12),
     supabase.from("tasks")
-      .select("id,title,due_date,completed,leads(id,name,event_date)")
+      .select("id,title,due_date,completed,status,priority,task_type,category,percent_complete,assigned_to,owner:profiles!tasks_assigned_to_fkey(id,full_name,email),leads(id,name,event_date)")
       .eq("completed",false).order("due_date",{ascending:true,nullsFirst:false}).limit(12),
     supabase.from("quotes").select("id,total,status,created_at"),
     supabase.from("leads").select("*",{count:"exact",head:true}).not("status","in","(booked,lost)"),
@@ -65,6 +65,13 @@ export default async function Dashboard(){
   const quoteValue=(quotes??[]).reduce((s,q)=>s+Number(q.total||0),0);
   const overdue=(openTasks??[]).filter(t=>t.due_date && t.due_date<today);
   const dueToday=(openTasks??[]).filter(t=>t.due_date===today);
+  const buildingTasks=(openTasks??[]).filter(t=>(t.task_type||"building")==="building");
+  const buildingOverdue=buildingTasks.filter(t=>t.due_date&&t.due_date<today);
+  const buildingDueToday=buildingTasks.filter(t=>t.due_date===today);
+  const sevenDays=new Date(todayStart); sevenDays.setDate(sevenDays.getDate()+7);
+  const sevenDayKey=dateKey(sevenDays);
+  const buildingDueSoon=buildingTasks.filter(t=>t.due_date&&t.due_date>today&&t.due_date<=sevenDayKey);
+  const buildingAverageProgress=buildingTasks.length?Math.round(buildingTasks.reduce((sum,t)=>sum+Number(t.percent_complete||0),0)/buildingTasks.length):100;
   const pendingQuotes=(quotes??[]).filter(q=>q.status==="draft"||q.status==="sent");
   const paymentAlerts=(paymentSchedules??[]).filter(p=>p.due_date&&p.due_date<=today);
 
@@ -194,6 +201,28 @@ export default async function Dashboard(){
           <div className="assignment-row"><span>Proposal value</span><b>${quoteValue.toLocaleString()}</b></div>
           <div className="assignment-row"><span>Active clients</span><b>{activeLeads??0}</b></div>
           <div className="assignment-row"><span>Upcoming events</span><b>{upcomingEvents?.length||0}</b></div>
+        </div>
+      </section>
+
+      <section className="dash-card dash-span-6 building-accountability-card">
+        <div className="card-heading"><div><span className="eyebrow">Building operations</span><h2>Building Accountability</h2></div><Link href="/app/tasks">View all →</Link></div>
+        <div className="building-accountability-metrics">
+          <div><span>Open</span><b>{buildingTasks.length}</b></div>
+          <div className={buildingDueToday.length?"warning":""}><span>Due Today</span><b>{buildingDueToday.length}</b></div>
+          <div className={buildingOverdue.length?"danger":""}><span>Overdue</span><b>{buildingOverdue.length}</b></div>
+          <div><span>Due Soon</span><b>{buildingDueSoon.length}</b></div>
+        </div>
+        <div className="building-progress-label"><span>Average task progress</span><b>{buildingAverageProgress}%</b></div>
+        <div className="building-progress-track"><div style={{width:`${buildingAverageProgress}%`}}/></div>
+        <div className="building-urgent-list">
+          {[...buildingOverdue,...buildingDueToday,...buildingDueSoon].slice(0,4).map(task=>{
+            const owner=Array.isArray((task as any).owner)?(task as any).owner[0]:(task as any).owner;
+            const state=task.due_date<today?"Overdue":task.due_date===today?"Due today":`Due ${task.due_date}`;
+            return <Link href="/app/tasks" className={`building-urgent-item ${task.due_date<today?"danger":task.due_date===today?"warning":""}`} key={task.id}>
+              <div><b>{task.title}</b><span>{owner?.full_name||owner?.email||"Unassigned"} · {state}</span></div><strong>{task.percent_complete||0}%</strong>
+            </Link>
+          })}
+          {!buildingTasks.length&&<div className="empty-state">No open building tasks.</div>}
         </div>
       </section>
 

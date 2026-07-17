@@ -20,7 +20,7 @@ export default async function AppNav(){
         <Link href="/app/calculator">Pricing Calculator</Link>
         <Link href="/app/floor-plans">Floor Plans</Link>
         <Link href="/app/reference">Venue Reference</Link>
-        <Link href="/app/tasks">Tasks</Link>
+        <Link href="/app/tasks">Operations</Link>
         <Link href="/app/quotes">Quotes</Link>
         <Link href="/app/payments">Payments</Link>
         <Link href="/app/settings">Settings</Link>

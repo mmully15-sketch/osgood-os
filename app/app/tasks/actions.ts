@@ -1,10 +1,11 @@
 "use server";
+import { randomUUID } from "crypto";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-
-export async function toggleTaskFromList(taskId:string,completed:boolean){
-  const supabase=await createClient();
-  const {error}=await supabase.from("tasks").update({completed:!completed}).eq("id",taskId);
-  if(error) throw new Error(error.message);
-  revalidatePath("/app/tasks");
-}
+import { redirect } from "next/navigation";
+const val=(f:FormData,k:string)=>String(f.get(k)||"").trim();
+const refresh=()=>{revalidatePath("/app");revalidatePath("/app/tasks");revalidatePath("/app/leads")};
+export async function createTask(f:FormData){const s=await createClient();const {data:{user}}=await s.auth.getUser();const title=val(f,"title"),assigned=val(f,"assigned_to"),due=val(f,"due_date"),status=val(f,"status")||"not_started";if(!title)throw new Error("Task title is required.");if(!assigned)throw new Error("Every task must have one accountable owner.");if(!due)throw new Error("Every task must have a due date.");if(status==="blocked"&&!val(f,"blocked_reason"))throw new Error("Blocked tasks require a reason.");const {error}=await s.from("tasks").insert({id:randomUUID(),title,description:val(f,"description")||null,task_type:val(f,"task_type")||"building",category:val(f,"category")||"Other",priority:val(f,"priority")||"normal",status,due_date:due,assigned_to:assigned,created_by:user?.id||null,percent_complete:status==="completed"?100:Number(f.get("percent_complete")||0),blocked_reason:status==="blocked"?val(f,"blocked_reason"):null,notes:val(f,"notes")||null,completed:status==="completed",completed_at:status==="completed"?new Date().toISOString():null,completed_by:status==="completed"?user?.id:null});if(error)throw new Error(error.message);await s.from("activity_log").insert({id:randomUUID(),action:"task_created",description:`Created task: ${title}`,user_id:user?.id||null});refresh();redirect("/app/tasks")}
+export async function updateTask(id:string,f:FormData){const s=await createClient();const {data:{user}}=await s.auth.getUser();const title=val(f,"title"),assigned=val(f,"assigned_to"),due=val(f,"due_date"),status=val(f,"status")||"not_started";if(!title||!assigned||!due)throw new Error("Title, owner, and due date are required.");if(status==="blocked"&&!val(f,"blocked_reason"))throw new Error("Blocked tasks require a reason.");const completed=status==="completed";const {error}=await s.from("tasks").update({title,description:val(f,"description")||null,task_type:val(f,"task_type")||"building",category:val(f,"category")||"Other",priority:val(f,"priority")||"normal",status,due_date:due,assigned_to:assigned,percent_complete:completed?100:Math.max(0,Math.min(100,Number(f.get("percent_complete")||0))),blocked_reason:status==="blocked"?val(f,"blocked_reason"):null,notes:val(f,"notes")||null,completed,completed_at:completed?new Date().toISOString():null,completed_by:completed?user?.id:null,updated_at:new Date().toISOString()}).eq("id",id);if(error)throw new Error(error.message);refresh()}
+export async function toggleTaskFromList(id:string,completed:boolean){const s=await createClient();const {data:{user}}=await s.auth.getUser();const {error}=await s.from("tasks").update({completed:!completed,status:!completed?"completed":"not_started",percent_complete:!completed?100:0,completed_at:!completed?new Date().toISOString():null,completed_by:!completed?user?.id:null,updated_at:new Date().toISOString()}).eq("id",id);if(error)throw new Error(error.message);refresh()}
+export async function deleteTask(id:string){const s=await createClient();const {error}=await s.from("tasks").delete().eq("id",id);if(error)throw new Error(error.message);refresh()}

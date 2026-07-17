@@ -1,35 +1,26 @@
-# Osgood OS v0.8 Operations Dashboard
+# Osgood OS
 
-This is a changed-files-only update for the development branch.
+Osgood OS is the internal sales, event, proposal, payment, floor-planning, and building-operations platform for The Osgood Wedding & Events.
 
-## New home screen
+## Version
 
-- Today's events
-- Tomorrow's events
-- Tasks due today
-- Overdue tasks
-- Upcoming event readiness
-- Open walkthroughs
-- Unconfirmed vendors
-- Event-day staff assignments
-- Quote value and open quote count
-- Active leads
-- Recent activity
+`1.0.0`
 
-## Database
+## Local development
 
-No new Supabase migration is required. This dashboard uses tables already created by migrations 002 through 005.
+```bash
+npm install
+npm run dev
+```
 
-## Apply this update
+## Operations Center setup
 
-Copy only these files into the existing local repository:
+Run the following migration once in Supabase SQL Editor:
 
-- `app/app/page.tsx`
-- `app/globals.css`
-- `README.md`
+```text
+supabase/migrations/008_operations_center_tasks.sql
+```
 
-Commit to the `development` branch.
+## Deployment
 
-Suggested commit:
-
-`Add operations command center dashboard`
+The project is designed for GitHub + Vercel deployment. Use the `development` branch for preview testing and merge to `main` after validation.
