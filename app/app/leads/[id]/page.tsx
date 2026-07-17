@@ -11,7 +11,7 @@ export default async function LeadDetailPage({params}:{params:Promise<{id:string
     supabase.from("tasks").select("*").eq("lead_id",id).order("due_date",{ascending:true,nullsFirst:false}),
     supabase.from("quotes").select("*").eq("lead_id",id).order("created_at",{ascending:false}),
     supabase.from("activity_log").select("*").order("created_at",{ascending:false}).limit(12),
-    supabase.from("events").select("id,title,start_at,status,workflow_stage,event_checklist(*)").eq("lead_id",id).order("start_at",{ascending:true})
+    supabase.from("events").select("id,title,start_at,status,workflow_stage,event_checklist(*),event_day_assignments(id,assignment_role,profile_id,profiles:profiles!event_day_assignments_profile_id_fkey(id,full_name))").eq("lead_id",id).order("start_at",{ascending:true})
   ]);
   if(error||!lead) notFound();
 
@@ -88,7 +88,66 @@ export default async function LeadDetailPage({params}:{params:Promise<{id:string
         </section>
       </div>
       <aside>
-        <section className="card"><h2>Tasks</h2>
+        <section className="card">
+          <div className="card-heading">
+            <div>
+              <span className="eyebrow">Event staffing</span>
+              <h2>Event Day Assignments</h2>
+            </div>
+          </div>
+
+          {(events??[]).map(event=>{
+            const roleDefinitions=[
+              {key:"setup",label:"Setup Team"},
+              {key:"opener",label:"Event Openers"},
+              {key:"closer",label:"Event Closers"},
+              {key:"teardown",label:"Tear Down Team"}
+            ];
+            const eventAssignments=(event.event_day_assignments??[]) as any[];
+            const byRole=eventAssignments.reduce((acc:any,item:any)=>{
+              (acc[item.assignment_role]??=[]).push(item);
+              return acc;
+            },{});
+            const staffedCount=roleDefinitions.filter(role=>(byRole[role.key]?.length||0)>=2).length;
+
+            return <div className="client-assignment-preview" key={event.id} style={{marginTop:14,paddingTop:14,borderTop:"1px solid var(--line)"}}>
+              <div style={{display:"flex",justifyContent:"space-between",gap:12,alignItems:"flex-start",marginBottom:10}}>
+                <div>
+                  <b>{event.title}</b>
+                  <div className="muted" style={{fontSize:11}}>{new Date(event.start_at).toLocaleDateString()}</div>
+                </div>
+                <span className={`badge ${staffedCount===4?"badge-success":""}`}>{staffedCount}/4 staffed</span>
+              </div>
+
+              <div style={{display:"grid",gap:8}}>
+                {roleDefinitions.map(role=>{
+                  const assigned=byRole[role.key]??[];
+                  const ready=assigned.length>=2;
+                  return <div key={role.key} style={{border:"1px solid var(--line)",borderRadius:10,padding:"9px 10px",background:ready?"#eef7f1":"#fff7e8"}}>
+                    <div style={{display:"flex",justifyContent:"space-between",gap:8,alignItems:"center"}}>
+                      <b style={{fontSize:12}}>{role.label}</b>
+                      <span style={{fontSize:10,fontWeight:800,color:ready?"#245c3e":"#77521a"}}>{assigned.length}/2 {ready?"Ready":"Required"}</span>
+                    </div>
+                    <div className="muted" style={{fontSize:11,marginTop:4}}>
+                      {assigned.length
+                        ? assigned.map((item:any)=>{
+                            const profile=Array.isArray(item.profiles)?item.profiles[0]:item.profiles;
+                            return profile?.full_name||"Name not set";
+                          }).join(", ")
+                        : "No team members assigned"}
+                    </div>
+                  </div>
+                })}
+              </div>
+
+              <Link className="link-button" style={{display:"inline-block",marginTop:10}} href={`/app/calendar/${event.id}`}>Manage Assignments</Link>
+            </div>
+          })}
+
+          {!events?.length&&<p className="muted">No calendar event is linked to this client yet.</p>}
+        </section>
+
+        <section className="card" style={{marginTop:16}}><h2>Tasks</h2>
           <form action={createTaskForLead.bind(null,id)} className="form-grid">
             <div className="full"><label>Task</label><input name="title" placeholder="Follow up, send contract, collect deposit..." required/></div>
             <div className="full"><label>Due Date</label><input name="due_date" type="date"/></div>
