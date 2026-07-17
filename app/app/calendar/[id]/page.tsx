@@ -29,7 +29,7 @@ export default async function EventDetailPage({params}:{params:Promise<{id:strin
     supabase.from("event_timeline").select("*").eq("event_id",id).order("item_time",{ascending:true,nullsFirst:false}),
     supabase.from("event_vendors").select("*").eq("event_id",id).order("vendor_type"),
     supabase.from("event_rooms").select("*").eq("event_id",id).order("room_name"),
-    supabase.from("event_day_assignments").select("id,assignment_role,profile_id,profiles(id,full_name,email)").eq("event_id",id).order("created_at"),
+    supabase.from("event_day_assignments").select("id,assignment_role,profile_id,profiles:profiles!event_day_assignments_profile_id_fkey(id,full_name,email)").eq("event_id",id).order("created_at"),
     supabase.from("profiles").select("id,full_name,email").eq("active",true).order("full_name")
   ]);
 
