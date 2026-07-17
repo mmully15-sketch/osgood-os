@@ -245,3 +245,238 @@ th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--mute
   .proposal-section{break-inside:avoid}.line-items{break-inside:avoid}.proposal-intro h1{font-size:36px}
   @page{size:letter;margin:.35in}
 }
+/* Replace the previous Event Day Assignments CSS block with this version. */
+.event-day-assignments{
+  margin:16px 0 22px;
+  padding:24px;
+  border:1px solid #d9c7a9;
+  border-radius:22px;
+  background:
+    radial-gradient(circle at top right,rgba(190,145,69,.12),transparent 32%),
+    linear-gradient(145deg,#fff 0%,#f7f1e7 100%);
+  box-shadow:0 14px 34px rgba(35,27,19,.10)
+}
+.event-assignment-heading{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:22px;
+  margin-bottom:20px;
+  padding-bottom:17px;
+  border-bottom:1px solid rgba(151,112,53,.22)
+}
+.event-assignment-heading h2{
+  font-family:Georgia,serif;
+  font-size:30px;
+  letter-spacing:-.02em;
+  margin:3px 0 6px
+}
+.event-assignment-heading p{margin:0;color:var(--muted);max-width:720px;line-height:1.55}
+.eyebrow{display:block;color:#956821;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.16em}
+.assignment-overall{
+  min-width:150px;
+  border-radius:16px;
+  padding:12px 16px;
+  text-align:center;
+  border:1px solid var(--line);
+  background:#fff;
+  box-shadow:0 5px 16px rgba(32,25,18,.06)
+}
+.assignment-overall b{display:block;font-family:Georgia,serif;font-size:27px;line-height:1}
+.assignment-overall span{display:block;margin-top:5px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.assignment-overall.complete{background:#eaf5ed;border-color:#b8d7c3;color:#245c3e}
+.assignment-overall.incomplete{background:#fff5df;border-color:#dfc382;color:#76501a}
+.event-assignment-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.event-assignment-card{
+  position:relative;
+  overflow:hidden;
+  border:1px solid #ddd1bf;
+  border-radius:17px;
+  padding:16px;
+  background:rgba(255,255,255,.92);
+  min-width:0;
+  box-shadow:0 6px 18px rgba(42,33,24,.06)
+}
+.event-assignment-card:before{
+  content:"";
+  position:absolute;
+  inset:0 auto 0 0;
+  width:4px;
+  background:#c89443
+}
+.event-assignment-card.staffed{border-color:#b9d4c3}
+.event-assignment-card.staffed:before{background:#3e8a5d}
+.event-assignment-card.needs-staff{border-color:#dfc58e}
+.event-assignment-card-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.event-assignment-card-head>div:first-child{display:flex;gap:11px;align-items:flex-start}
+.assignment-role-mark{
+  width:34px;
+  height:34px;
+  flex:0 0 34px;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  background:#211c18;
+  color:#dcb675;
+  font-family:Georgia,serif;
+  font-size:16px;
+  font-weight:900;
+  box-shadow:inset 0 0 0 1px rgba(220,182,117,.25)
+}
+.event-assignment-card h3{font-family:Georgia,serif;font-size:20px;margin:0 0 4px}
+.event-assignment-card-head p{font-size:11px;color:var(--muted);margin:0;line-height:1.45}
+.assignment-count{
+  white-space:nowrap;
+  border-radius:999px;
+  background:#f1eadf;
+  padding:7px 10px;
+  font-size:9px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+  color:#5d5044
+}
+.assigned-person-list{display:grid;gap:8px;margin:14px 0}
+.assigned-person{
+  display:grid;
+  grid-template-columns:38px minmax(0,1fr) auto;
+  align-items:center;
+  gap:10px;
+  border:1px solid #e4dacb;
+  background:#fbf9f5;
+  border-radius:12px;
+  padding:9px
+}
+.assigned-person-avatar{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(145deg,#29221d,#151210);
+  color:#deb875;
+  font-family:Georgia,serif;
+  font-size:16px;
+  font-weight:900;
+  box-shadow:0 3px 8px rgba(0,0,0,.16)
+}
+.assigned-person-copy{min-width:0}
+.assigned-person b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.assigned-person small{display:block;color:#8b7c6c;font-size:9px;text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.assignment-remove{
+  border:1px solid transparent;
+  border-radius:8px;
+  background:transparent;
+  color:#8b3d36;
+  font-size:9px;
+  font-weight:900;
+  cursor:pointer;
+  padding:7px 8px
+}
+.assignment-remove:hover{background:#f8e8e5;border-color:#e9c4bf}
+.assignment-empty{
+  border:1px dashed #d7c7ae;
+  border-radius:11px;
+  color:var(--muted);
+  background:#fcfaf6;
+  font-size:11px;
+  padding:13px;
+  text-align:center
+}
+.assignment-add-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.assignment-add-form select{min-width:0;background:#fff}
+.assignment-add-form .btn{padding-left:17px;padding-right:17px}
+.assignment-status{
+  margin-top:10px;
+  border-radius:10px;
+  padding:8px 10px;
+  text-align:center;
+  font-size:10px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.05em
+}
+.assignment-status.complete{background:#e8f4ec;color:#245c3e;border:1px solid #c0dcc9}
+.assignment-status.warning{background:#fff2d7;color:#77521a;border:1px solid #e5cb91}
+@media(max-width:900px){
+  .event-assignment-grid{grid-template-columns:1fr}
+  .event-assignment-heading{flex-direction:column}
+  .assignment-overall{width:100%}
+}
+@media(max-width:560px){
+  .event-day-assignments{padding:16px}
+  .event-assignment-card-head{flex-direction:column}
+  .assignment-count{align-self:flex-start}
+}
+/* Append this file to app/globals.css */
+
+.quote-index-hero,.quote-detail-hero,.quote-edit-hero{
+  display:flex;justify-content:space-between;gap:24px;align-items:flex-end;
+}
+.quote-toolbar{margin:18px 0}
+.quote-search{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.quote-search input{min-width:280px;flex:1}
+.quote-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}
+.quote-summary-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;justify-content:space-between;align-items:center}
+.quote-summary-card span{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:800}
+.quote-summary-card b{font-family:Georgia,serif;font-size:28px}
+.quote-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.quote-card{background:#fff;border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:0 14px 35px rgba(31,26,21,.06)}
+.quote-card-main{display:block;padding:24px;color:inherit;text-decoration:none}
+.quote-card-main:hover{background:#fcfaf6}
+.quote-card-top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}
+.quote-card-top h2{margin:4px 0 0;font-family:Georgia,serif;font-size:30px}
+.quote-status{padding:7px 11px;border-radius:999px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:900;background:#eee8df}
+.status-accepted{background:#dceee3;color:#245c3e}.status-sent{background:#e8edf6;color:#334d78}.status-declined,.status-expired{background:#f2dfdc;color:#8a3c36}
+.quote-card-event{display:flex;justify-content:space-between;gap:12px;padding:18px 0;border-bottom:1px solid var(--line);color:var(--muted)}
+.quote-card-money{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:18px}
+.quote-card-money div{display:grid;gap:3px}.quote-card-money span{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800}.quote-card-money b{font-size:21px}
+.quote-card-actions{display:flex;gap:9px;padding:0 24px 22px}
+.empty-state{grid-column:1/-1;text-align:center;padding:60px}
+
+.quote-detail-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.luxury-proposal-layout{display:grid;grid-template-columns:minmax(0,8fr) minmax(300px,4fr);gap:22px;align-items:start}
+.luxury-proposal{background:#fff;box-shadow:0 22px 70px rgba(30,25,20,.14)}
+.proposal-cover,.proposal-page{position:relative;min-height:980px;padding:72px;background:#f4efe6;overflow:hidden}
+.proposal-cover:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(177,140,73,.25),transparent 33%),linear-gradient(135deg,#171411 0%,#27211b 64%,#3b3024 100%)}
+.proposal-cover-frame{position:relative;z-index:1;min-height:830px;border:1px solid rgba(213,181,117,.55);padding:48px;display:flex;flex-direction:column;justify-content:space-between;color:white}
+.proposal-brand{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}.proposal-brand img{width:175px;max-height:100px;object-fit:contain;filter:brightness(0) invert(1)}.proposal-brand span{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#d9c49e}
+.proposal-cover-copy{max-width:650px}.proposal-kicker{display:block;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:800;color:#b79454;margin-bottom:18px}.proposal-cover-copy h1{font-family:Georgia,serif;font-size:68px;line-height:1.02;margin:0;color:#fff;font-weight:400}.proposal-cover-rule{width:85px;height:1px;background:#c9a86b;margin:28px 0}.proposal-cover-copy p{font-family:Georgia,serif;font-size:25px;margin:0 0 8px}.proposal-cover-copy b{color:#ddc69b;font-weight:500}
+.proposal-cover-footer{display:flex;justify-content:space-between;gap:20px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#d9c49e}
+.proposal-page{background:#fff;color:#211c17}.proposal-page-number{position:absolute;right:60px;top:48px;font-family:Georgia,serif;font-size:60px;color:#ece4d7}.proposal-page h2{font-family:Georgia,serif;font-size:48px;font-weight:400;line-height:1.1;max-width:650px;margin:0 0 28px}.proposal-lead{font-family:Georgia,serif;font-size:23px;line-height:1.6;max-width:720px;color:#51483f}
+.proposal-feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#ded4c5;margin-top:55px;border:1px solid #ded4c5}.proposal-feature-grid div{background:#faf7f1;padding:26px}.proposal-feature-grid span,.proposal-payment-grid span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.14em;font-weight:800;color:#8a7251;margin-bottom:8px}.proposal-feature-grid b{font-family:Georgia,serif;font-size:20px;font-weight:500}.proposal-status{text-transform:capitalize}
+.proposal-editorial-quote{margin-top:75px;padding-left:30px;border-left:2px solid #b79454;font-family:Georgia,serif;font-size:28px;line-height:1.5;color:#6c5c49}
+.proposal-dark-page{background:#211c17;color:#fff}.proposal-dark-page .proposal-page-number{color:#332c25}.proposal-dark-page h2{color:#fff}.proposal-inclusion-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:48px}.proposal-inclusion-grid div{border-top:1px solid #5a4d40;padding:24px 0;display:grid;grid-template-columns:52px 1fr;gap:15px}.proposal-inclusion-grid span{color:#c8a464;font-size:12px;letter-spacing:.1em}.proposal-inclusion-grid p{margin:0;color:#efe7dc;font-family:Georgia,serif;font-size:20px;line-height:1.4}
+.luxury-line-items{width:100%;border-collapse:collapse;margin-top:40px}.luxury-line-items th{font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:#8a7251;padding:14px 0;border-bottom:1px solid #cabda9}.luxury-line-items th:last-child,.luxury-line-items td:last-child{text-align:right}.luxury-line-items td{padding:22px 0;border-bottom:1px solid #e8e0d3;font-family:Georgia,serif;font-size:19px}.discount-row td{color:#7b6241}
+.luxury-total{display:flex;justify-content:space-between;align-items:center;background:#211c17;color:white;padding:28px;margin-top:28px}.luxury-total span{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#d3bc91}.luxury-total b{font-family:Georgia,serif;font-size:34px}
+.proposal-payment-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:30px}.proposal-payment-grid div{padding:20px;border:1px solid #ddd2c2}.proposal-payment-grid b{font-family:Georgia,serif;font-size:22px}.proposal-payment-grid .balance{background:#f4eee4}
+.proposal-schedule{display:grid;gap:10px;margin-top:24px}.proposal-schedule div{display:grid;grid-template-columns:1fr auto;gap:4px 15px;padding:15px 0;border-bottom:1px solid #e2d8ca}.proposal-schedule small{grid-column:1/-1;color:#827667}
+.proposal-signature-grid{display:grid;grid-template-columns:2fr 1fr;gap:40px;margin-top:85px}.proposal-signature-grid span{font-size:11px;text-transform:uppercase;letter-spacing:.12em}.signature-line{height:70px;border-bottom:1px solid #665b4e}.proposal-signature-grid small{display:block;margin-top:8px;color:#81766b}
+.luxury-proposal-footer{display:flex;justify-content:space-between;gap:30px;margin-top:150px;padding-top:25px;border-top:1px solid #c9bda9}.luxury-proposal-footer div{display:grid;gap:5px}.luxury-proposal-footer span{font-size:11px;color:#71675c}
+.quote-control-panel{position:sticky;top:20px}.danger-card{border-color:#e4c8c3}.quote-delete-button{background:#f1deda;color:#8a3c36}
+
+.quote-edit-layout{display:grid;grid-template-columns:minmax(0,8fr) minmax(300px,4fr);gap:18px;align-items:start}
+.quote-editor-items{display:grid;gap:10px;margin-bottom:12px}.quote-editor-row{display:grid;grid-template-columns:1fr 180px auto;gap:10px;align-items:center}
+.quote-editor-financial-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}.quote-editor-totals{margin-top:22px;border-top:1px solid var(--line);padding-top:16px;display:grid;gap:8px}.quote-editor-totals div{display:flex;justify-content:space-between}.quote-editor-totals .total{font-size:22px;font-family:Georgia,serif;border-top:1px solid var(--line);padding-top:12px}.quote-save-card{position:sticky;top:20px}
+
+@media(max-width:980px){
+  .quote-card-grid,.luxury-proposal-layout,.quote-edit-layout{grid-template-columns:1fr}
+  .quote-summary-grid{grid-template-columns:repeat(2,1fr)}
+  .quote-control-panel,.quote-save-card{position:static}
+}
+@media(max-width:680px){
+  .quote-index-hero,.quote-detail-hero,.quote-edit-hero{display:block}
+  .quote-card-grid,.proposal-feature-grid,.proposal-inclusion-grid,.proposal-payment-grid{grid-template-columns:1fr}
+  .quote-summary-grid{grid-template-columns:1fr 1fr}
+  .quote-editor-row{grid-template-columns:1fr}.proposal-cover,.proposal-page{padding:32px;min-height:auto}.proposal-cover-frame{min-height:720px;padding:28px}.proposal-cover-copy h1{font-size:46px}.proposal-page h2{font-size:36px}
+}
+@media print{
+  body{background:#fff!important}
+  .no-print,header,nav,.sidebar{display:none!important}
+  main,.app-main{padding:0!important;margin:0!important;max-width:none!important}
+  .luxury-proposal-layout{display:block}
+  .luxury-proposal{box-shadow:none}
+  .proposal-cover,.proposal-page{min-height:10in;page-break-after:always;break-after:page}
+  .proposal-acceptance{page-break-after:auto;break-after:auto}
+  @page{size:letter portrait;margin:0}
+}

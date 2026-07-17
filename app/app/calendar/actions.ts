@@ -192,3 +192,40 @@ export async function deleteEvent(id:string){
   revalidatePath("/app");revalidatePath("/app/calendar");
   redirect("/app/calendar");
 }
+
+
+export async function assignEventDayStaff(eventId:string,assignmentRole:string,formData:FormData){
+  const allowedRoles=new Set(["setup","opener","closer","teardown"]);
+  if(!allowedRoles.has(assignmentRole)) throw new Error("Invalid event assignment role.");
+
+  const profileId=val(formData,"profile_id");
+  if(!profileId) return;
+
+  const supabase=await createClient();
+  const {data:{user}}=await supabase.auth.getUser();
+
+  const {error}=await supabase.from("event_day_assignments").upsert({
+    id:randomUUID(),
+    event_id:eventId,
+    assignment_role:assignmentRole,
+    profile_id:profileId,
+    created_by:user?.id||null
+  },{
+    onConflict:"event_id,assignment_role,profile_id",
+    ignoreDuplicates:true
+  });
+
+  if(error) throw new Error(error.message);
+
+  revalidatePath(`/app/calendar/${eventId}`);
+  revalidatePath("/app/calendar");
+  revalidatePath("/app/leads");
+}
+
+export async function removeEventDayStaff(assignmentId:string,eventId:string){
+  const supabase=await createClient();
+  const {error}=await supabase.from("event_day_assignments").delete().eq("id",assignmentId);
+  if(error) throw new Error(error.message);
+  revalidatePath(`/app/calendar/${eventId}`);
+  revalidatePath(`/app/leads`);
+}

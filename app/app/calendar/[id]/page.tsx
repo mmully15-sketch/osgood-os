@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import {
   addOrUpdateRoom, addTimelineItem, addVendor, deleteEvent,
+  assignEventDayStaff, removeEventDayStaff,
   toggleChecklist, updateChecklistItem, updateEvent
 } from "../actions";
 
@@ -21,13 +22,15 @@ export default async function EventDetailPage({params}:{params:Promise<{id:strin
 
   const [
     {data:event,error},{data:checklist},{data:timeline},
-    {data:vendors},{data:rooms}
+    {data:vendors},{data:rooms},{data:assignments},{data:teamProfiles}
   ]=await Promise.all([
     supabase.from("events").select("*,leads(id,name,email,phone,event_date)").eq("id",id).single(),
     supabase.from("event_checklist").select("*").eq("event_id",id).order("category").order("sort_order"),
     supabase.from("event_timeline").select("*").eq("event_id",id).order("item_time",{ascending:true,nullsFirst:false}),
     supabase.from("event_vendors").select("*").eq("event_id",id).order("vendor_type"),
-    supabase.from("event_rooms").select("*").eq("event_id",id).order("room_name")
+    supabase.from("event_rooms").select("*").eq("event_id",id).order("room_name"),
+    supabase.from("event_day_assignments").select("id,assignment_role,profile_id,profiles:profiles!event_day_assignments_profile_id_fkey(id,full_name,email)").eq("event_id",id).order("created_at"),
+    supabase.from("profiles").select("id,full_name,email").eq("active",true).order("full_name")
   ]);
 
   if(error||!event) notFound();
@@ -38,6 +41,17 @@ export default async function EventDetailPage({params}:{params:Promise<{id:strin
   const grouped=(checklist??[]).reduce((acc:any,item:any)=>{
     (acc[item.category]??=[]).push(item);return acc;
   },{});
+
+  const assignmentRoles=[
+    {key:"setup",label:"Setup Team",description:"Pre-event room, table, chair, linen, and venue setup."},
+    {key:"opener",label:"Event Openers",description:"Open the building, complete opening checks, and receive vendors."},
+    {key:"closer",label:"Event Closers",description:"Complete closing checks, secure the venue, and lock the building."},
+    {key:"teardown",label:"Tear Down Team",description:"Post-event teardown, cleanup coordination, and room reset."}
+  ];
+  const assignmentsByRole=(assignments??[]).reduce((acc:any,item:any)=>{
+    (acc[item.assignment_role]??=[]).push(item);return acc;
+  },{});
+  const fullyStaffedRoles=assignmentRoles.filter(role=>(assignmentsByRole[role.key]?.length||0)>=2).length;
 
   return <>
     <div className="page-head">
@@ -55,6 +69,66 @@ export default async function EventDetailPage({params}:{params:Promise<{id:strin
         {event.lead_id&&<Link className="btn btn-gold" href={`/app/leads/${event.lead_id}`}>Open Client</Link>}
       </div>
     </div>
+
+    <section className="event-day-assignments">
+      <div className="event-assignment-heading">
+        <div>
+          <span className="eyebrow">Event staffing</span>
+          <h2>Event Day Assignments</h2>
+          <p>Every responsibility requires at least two assigned team members. Additional staff may be added as needed.</p>
+        </div>
+        <div className={`assignment-overall ${fullyStaffedRoles===4?"complete":"incomplete"}`}>
+          <b>{fullyStaffedRoles}/4</b>
+          <span>teams fully staffed</span>
+        </div>
+      </div>
+
+      <div className="event-assignment-grid">
+        {assignmentRoles.map(role=>{
+          const roleAssignments=assignmentsByRole[role.key]??[];
+          const remaining=Math.max(0,2-roleAssignments.length);
+          const assignedIds=new Set(roleAssignments.map((item:any)=>item.profile_id));
+          return <article className={`event-assignment-card ${remaining===0?"staffed":"needs-staff"}`} key={role.key}>
+            <div className="event-assignment-card-head">
+              <div>
+                <div className={`assignment-role-mark role-${role.key}`} aria-hidden="true">{role.label.slice(0,1)}</div><div><h3>{role.label}</h3>
+                <p>{role.description}</p></div>
+              </div>
+              <span className="assignment-count">{roleAssignments.length}/2 minimum</span>
+            </div>
+
+            <div className="assigned-person-list">
+              {roleAssignments.map((assignment:any)=>{
+                const profile=Array.isArray(assignment.profiles)?assignment.profiles[0]:assignment.profiles;
+                const displayName=profile?.full_name||"Name not set";
+                return <div className="assigned-person" key={assignment.id}>
+                  <div className="assigned-person-avatar">{displayName.slice(0,1).toUpperCase()}</div>
+                  <div className="assigned-person-copy"><b>{displayName}</b><small>Assigned team member</small></div>
+                  <form action={removeEventDayStaff.bind(null,assignment.id,id)}>
+                    <button className="assignment-remove" type="submit" aria-label={`Remove ${displayName}`}>Remove</button>
+                  </form>
+                </div>
+              })}
+              {!roleAssignments.length&&<div className="assignment-empty">No team members assigned.</div>}
+            </div>
+
+            <form action={assignEventDayStaff.bind(null,id,role.key)} className="assignment-add-form">
+              <select name="profile_id" required defaultValue="">
+                <option value="" disabled>Add a team member...</option>
+                {(teamProfiles??[]).filter(profile=>!assignedIds.has(profile.id)).map(profile=><option value={profile.id} key={profile.id}>
+                  {profile.full_name||"Name not set"}
+                </option>)}
+              </select>
+              <button className="btn btn-light" type="submit">Add</button>
+            </form>
+
+            <div className={`assignment-status ${remaining===0?"complete":"warning"}`}>
+              {remaining===0?"Fully staffed":`${remaining} more ${remaining===1?"person":"people"} required`}
+            </div>
+          </article>
+        })}
+      </div>
+    </section>
 
     <div className="workflow-bar">
       {stages.map((s,i)=>{
